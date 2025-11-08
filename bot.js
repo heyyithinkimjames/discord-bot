@@ -2,11 +2,16 @@ require('dotenv').config();
 const { Client, GatewayIntentBits } = require('discord.js');
 const express = require('express');
 
-// Basic express web server (keeps bot alive on Render)
+// ----------------------
+// Basic Express web server (keeps bot alive on Render)
 const app = express();
 app.get('/', (req, res) => res.send('Bot is running!'));
-app.listen(3000, () => console.log('🌐 Web server running...'));
 
+// Use the PORT Render provides, fallback to 3000 locally
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🌐 Web server running on port ${PORT}`));
+
+// ----------------------
 // Create Discord client
 const client = new Client({
   intents: [
@@ -16,11 +21,13 @@ const client = new Client({
   ]
 });
 
+// ----------------------
 // Log when bot is ready
 client.on('ready', () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
+// ----------------------
 // Basic command example
 client.on('messageCreate', message => {
   if (message.content === '!ping') {
@@ -28,5 +35,7 @@ client.on('messageCreate', message => {
   }
 });
 
-// Login to Discord
-client.login(process.env.TOKEN);
+// ----------------------
+// Login to Discord using environment variable
+// Make sure on Render you named it "DISCORD_TOKEN"
+client.login(process.env.DISCORD_TOKEN);
